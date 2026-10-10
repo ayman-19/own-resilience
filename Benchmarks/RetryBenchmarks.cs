@@ -1,6 +1,5 @@
 using BenchmarkDotNet.Attributes;
 using Microsoft.Extensions.Logging.Abstractions;
-using OwnResilience.Implementations;
 using ResiliencePackage.Implementations;
 
 namespace Benchmarks;
@@ -14,12 +13,9 @@ public class RetryBenchmarks
     [GlobalSetup]
     public void Setup()
     {
-        _ownPolicy = new RetryPolicy(
-            3,
-            ex => ex is InvalidOperationException,
-            attempt => TimeSpan.FromMilliseconds(500 * attempt),
-            null
-        );
+        _ownPolicy = OwnResilience
+            .Policy.Handle<InvalidOperationException>()
+            .WaitAndRetryAsync(3, attempt => TimeSpan.FromMilliseconds(500 * attempt), null);
 
         var factory = new RetryPolicyFactory(NullLogger<RetryPolicyFactory>.Instance);
         _pollyPolicy = factory.CreateRetryPolicy<InvalidOperationException>(3);

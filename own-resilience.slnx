@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Benchmarks/Benchmarks.csproj" />
+  <Project Path="OwnResilience/OwnResilience.csproj" />
+  <Project Path="ResiliencePackage/ResiliencePackage.csproj" />
+</Solution>
